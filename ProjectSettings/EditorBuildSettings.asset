@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/IntroScene.unity
     guid: 99d2adb89b4437444b98fc48da573020
   - enabled: 1
-    path: Assets/Scenes/BicycleScene.unity
+    path: Assets/Models/Bicycle Model #5/Scenes/BicycleScene 1.unity
     guid: 0a6669f88cef5be4f9a182c4a4c20244
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 62f9c35774989a145b02c594b055cb99, type: 2}
