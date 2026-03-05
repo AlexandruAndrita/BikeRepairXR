@@ -7,7 +7,9 @@ public class IntroFlowController : MonoBehaviour
     public GameObject descriptionPanel;
 
     public Button startButton;
+    public Button backButton;
     public Button nextButton;
+    public int currentPage = 0;
 
     void Start()
     {
@@ -16,6 +18,7 @@ public class IntroFlowController : MonoBehaviour
 
         if (startButton != null) startButton.onClick.AddListener(OnStartPressed);
         if (nextButton != null) nextButton.onClick.AddListener(OnNextPressed);
+        if (backButton != null) backButton.onClick.AddListener(OnBackPressed);
     }
 
     void OnStartPressed()
@@ -27,5 +30,16 @@ public class IntroFlowController : MonoBehaviour
     void OnNextPressed()
     {
         Debug.Log("Next button pressed! Action applies later.");
+        currentPage++;
+    }
+    void OnBackPressed()
+    {
+        Debug.Log("Back button pressed! Action applies later.");
+        currentPage--;
+        if (currentPage == 0)
+        {
+            if (welcomePanel != null) welcomePanel.SetActive(true);
+            if (descriptionPanel != null) descriptionPanel.SetActive(false);
+        }
     }
 }
