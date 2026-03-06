@@ -13,39 +13,18 @@ public class WrenchTool : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current == null)
-        {
-            Debug.Log("No keyboard detected");
-            return;
-        }
-
-        if (Keyboard.current.anyKey.wasPressedThisFrame)
-        {
-            Debug.Log("SOME KEY WAS PRESSED");
-        }
-
-        bool pressed = false;
-
-        try
-        {
-            pressed = Keyboard.current[turnKey].wasPressedThisFrame;
-        }
-        catch
-        {
-            Debug.LogWarning("Invalid Turn Key in Inspector. Re-select Backspace.");
-            return;
-        }
+        bool pressed =
+            OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch) ||
+            OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTouch);
 
         if (pressed)
         {
-            Debug.Log("KEY PRESSED -> " + turnKey +
-                      " | isHeld=" + isHeld +
-                      " | currentWheel=" + (currentWheel != null));
+            Debug.Log("TURN BUTTON PRESSED (A/X)");
         }
 
         if (isHeld && currentWheel != null && pressed)
         {
-            Debug.Log("Sending turn to wheel...");
+            Debug.Log("Registering turn...");
             currentWheel.RegisterTurn();
         }
     }
