@@ -16,6 +16,13 @@ public class WrenchProximityGrab : MonoBehaviour
     private Transform _rightController;
     private Transform _heldBy = null;
     private Rigidbody _rb;
+    private WrenchTool wrenchTool;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+        wrenchTool = GetComponent<WrenchTool>();
+    }
 
     private void Start()
     {
@@ -33,20 +40,17 @@ public class WrenchProximityGrab : MonoBehaviour
     {
         if (_heldBy == null)
         {
-            // Try grab with left grip
             TryGrab(OVRInput.Controller.LTouch, _leftController);
-            // Try grab with right grip
             TryGrab(OVRInput.Controller.RTouch, _rightController);
         }
         else
         {
-            // Follow the holding hand
             transform.position = _heldBy.position;
             transform.rotation = _heldBy.rotation;
 
-            // Release when grip is let go
-            bool leftRelease  = _heldBy == _leftController  &&
-                                OVRInput.GetUp(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch);
+            bool leftRelease = _heldBy == _leftController &&
+                               OVRInput.GetUp(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch);
+
             bool rightRelease = _heldBy == _rightController &&
                                 OVRInput.GetUp(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch);
 
@@ -68,12 +72,46 @@ public class WrenchProximityGrab : MonoBehaviour
     private void Grab(Transform hand)
     {
         _heldBy = hand;
-        if (_rb != null) _rb.isKinematic = true;
+
+        if (_rb != null)
+        {
+            _rb.linearVelocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+            _rb.isKinematic = true;
+        }
+
+        if (wrenchTool != null)
+            wrenchTool.SetHeld(true);
+
+        Debug.Log("Wrench grabbed");
     }
 
     private void Drop()
     {
         _heldBy = null;
-        // Wrench stays wherever it was dropped
+
+        if (wrenchTool != null)
+            wrenchTool.SetHeld(false);
+
+        if (_rb != null)
+        {
+            _rb.linearVelocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+            _rb.isKinematic = false;
+        }
+
+        Debug.Log("Wrench dropped");
+    }
+
+    public void OnGrabbed()
+    {
+        if (wrenchTool != null)
+            wrenchTool.SetHeld(true);
+    }
+
+    public void OnReleased()
+    {
+        if (wrenchTool != null)
+            wrenchTool.SetHeld(false);
     }
 }
