@@ -139,11 +139,11 @@
 *.tar lfs-file
 
 # Other
-*.unity merge=unityyamlmerge eol=lf
-*.prefab merge=unityyamlmerge eol=lf
-*.meta merge=unityyamlmerge eol=lf
-*.anim merge=unityyamlmerge eol=lf
-*.controller merge=unityyamlmerge eol=lf
+*.unity diff=unity merge=unityyamlmerge eol=lf
+*.prefab diff=unity merge=unityyamlmerge eol=lf
+*.meta diff=unity merge=unityyamlmerge eol=lf
+*.anim diff=unity merge=unityyamlmerge eol=lf
+*.controller diff=unity merge=unityyamlmerge eol=lf
 
 
 # Large binary assets
