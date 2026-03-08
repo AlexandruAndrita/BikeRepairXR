@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using System.Collections;
 
 public class WheelUnlocker : MonoBehaviour
 {
@@ -8,6 +10,10 @@ public class WheelUnlocker : MonoBehaviour
     [Header("References")]
     public Rigidbody wheelRigidbody;
     public MonoBehaviour grabbableScript;
+
+    [Header("UI")]
+    public GameObject unlockCounterCanvas;
+    public TMP_Text counterText;
 
     [Header("State")]
     public int currentTurns = 0;
@@ -19,6 +25,10 @@ public class WheelUnlocker : MonoBehaviour
     private void Start()
     {
         LockWheel();
+        UpdateCounterUI();
+
+        if (unlockCounterCanvas != null)
+            unlockCounterCanvas.SetActive(false);
     }
 
     public void SetWrenchInPlace(bool inPlace, WrenchTool wrench)
@@ -29,6 +39,9 @@ public class WheelUnlocker : MonoBehaviour
             activeWrench = wrench;
         else if (activeWrench == wrench)
             activeWrench = null;
+
+        if (!wheelUnlocked && unlockCounterCanvas != null)
+            unlockCounterCanvas.SetActive(inPlace);
     }
 
     public void RegisterTurn()
@@ -60,9 +73,20 @@ public class WheelUnlocker : MonoBehaviour
         currentTurns++;
         Debug.Log("Wheel turn count: " + currentTurns + " / " + requiredTurns);
 
+        UpdateCounterUI();
+
         if (currentTurns >= requiredTurns)
         {
             UnlockWheel();
+        }
+    }
+
+    private void UpdateCounterUI()
+    {
+        if (counterText != null)
+        {
+            if (counterText != null)
+                counterText.text = "Loosen axle\n" + currentTurns + " / " + requiredTurns;
         }
     }
 
@@ -99,5 +123,22 @@ public class WheelUnlocker : MonoBehaviour
         {
             grabbableScript.enabled = true;
         }
+
+        if (counterText != null)
+        {
+            counterText.text = "Wheel unlocked.\nYou can grab it now.";
+        }
+
+        if (unlockCounterCanvas != null)
+            StartCoroutine(HideCanvasAfterDelay());
+    }
+
+    private IEnumerator HideCanvasAfterDelay()
+    {
+        // canvas still visible for a couple of seconds; then it is disabled
+        yield return new WaitForSeconds(10f);
+
+        if (unlockCounterCanvas != null)
+            unlockCounterCanvas.SetActive(false);
     }
 }

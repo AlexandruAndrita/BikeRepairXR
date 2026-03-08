@@ -17,11 +17,13 @@ public class WrenchProximityGrab : MonoBehaviour
     private Transform _heldBy = null;
     private Rigidbody _rb;
     private WrenchTool wrenchTool;
+    public WrenchCollisionHelper collisionHelper;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
         wrenchTool = GetComponent<WrenchTool>();
+        collisionHelper = GetComponent<WrenchCollisionHelper>();
     }
 
     private void Start()
@@ -80,6 +82,9 @@ public class WrenchProximityGrab : MonoBehaviour
             _rb.isKinematic = true;
         }
 
+        if(collisionHelper != null)
+            collisionHelper.IgnoreCollisionWithWheel(true);
+
         if (wrenchTool != null)
             wrenchTool.SetHeld(true);
 
@@ -93,12 +98,18 @@ public class WrenchProximityGrab : MonoBehaviour
         if (wrenchTool != null)
             wrenchTool.SetHeld(false);
 
+        transform.position += transform.right * 0.08f + Vector3.up * 0.03f;
+
         if (_rb != null)
         {
             _rb.linearVelocity = Vector3.zero;
             _rb.angularVelocity = Vector3.zero;
+            _rb.useGravity = true;
             _rb.isKinematic = false;
         }
+
+        if (collisionHelper != null)
+            StartCoroutine(collisionHelper.ReenableWheelCollisionAfterDelay(0.25f));
 
         Debug.Log("Wrench dropped");
     }
