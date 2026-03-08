@@ -37,8 +37,14 @@ public class WheelTwoHandGrab : MonoBehaviour
     public Transform carpetTarget;
 
     [Tooltip("How close (metres) the wheel centre must be to carpetTarget to count as placed.")]
-    public float carpetPlaceRadius = 0.6f;
+    public float carpetPlaceRadius = 2.0f;
 
+    [Tooltip("Canvas shown when the wheel is placed on the carpet (Level Completed message).")]
+    public GameObject levelCompletedCanvas;
+    [Header("Horizontal Landing")]
+    [Tooltip("World-space Euler angles the wheel snaps to when it lands on the floor or carpet (lying flat). " +
+             "Adjust to match your model — default assumes the wheel's spin axis is local-X.")]
+    public Vector3 horizontalEulers = new Vector3(0f, 0f, 90f);
     // ── State ─────────────────────────────────────────────────────────────────
     private Transform _leftController;
     private Transform _rightController;
@@ -50,8 +56,12 @@ public class WheelTwoHandGrab : MonoBehaviour
     private Quaternion _startLocalRot;
     private Vector3    _prevMidpoint;
 
-    private bool _bothHeld  = false;
-    private bool _detached  = false;
+    private bool _bothHeld   = false;
+    private bool _detached   = false;
+    private bool _finalized  = false;
+
+    /// <summary>True once the wheel has been fully pulled off the bike.</summary>
+    public bool IsDetached => _detached;
 
     // ── Unity ─────────────────────────────────────────────────────────────────
     private void OnEnable()
@@ -88,6 +98,7 @@ public class WheelTwoHandGrab : MonoBehaviour
         _startLocalRot  = transform.localRotation;
         _bothHeld       = false;
         _detached       = false;
+        _finalized      = false;
     }
 
     private void Update()
@@ -141,7 +152,11 @@ public class WheelTwoHandGrab : MonoBehaviour
     private void BeginTwoHandHold()
     {
         _bothHeld = true;
-        if (_rb != null) _rb.isKinematic = true;
+        if (_rb != null)
+        {
+            _rb.isKinematic = true;
+            _rb.useGravity  = false;
+        }
 
         // Un-parent from bike so the wheel can move independently
         transform.SetParent(null, worldPositionStays: true);
@@ -167,8 +182,18 @@ public class WheelTwoHandGrab : MonoBehaviour
                 _rb.angularVelocity = Vector3.zero;
             }
         }
-        // Already detached: the wheel simply stays where it is in world space.
-        // The script remains active so the player can re-grab and keep moving it.
+        else
+        {
+            // Already detached — enable gravity so the wheel falls to the floor.
+            // ContinuousDynamic prevents the wheel from tunnelling through the thin
+            // floor trigger box at high fall speeds.
+            if (_rb != null)
+            {
+                _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                _rb.isKinematic = false;
+                _rb.useGravity  = true;
+            }
+        }
         // Completion is handled by the carpet proximity check in Update.
     }
 
@@ -188,6 +213,9 @@ public class WheelTwoHandGrab : MonoBehaviour
 
     private void FinalizeOnCarpet()
     {
+        if (_finalized) return;
+        _finalized = true;
+
         // Freeze the wheel in place over the carpet and end the interaction.
         if (_rb != null)
         {
@@ -196,6 +224,24 @@ public class WheelTwoHandGrab : MonoBehaviour
             _rb.linearVelocity  = Vector3.zero;
             _rb.angularVelocity = Vector3.zero;
         }
+
+        // Snap wheel to carpet centre so it sits cleanly, lying flat
+        transform.position = carpetTarget.position + Vector3.up * 0.05f;
+        transform.rotation = Quaternion.Euler(horizontalEulers);
+
+        // Disable all Behaviour components on the wheel and its children
+        // (catches Grabbable, ISDK interactables, etc. on any child)
+        foreach (var b in GetComponentsInChildren<Behaviour>(includeInactive: true))
+        {
+            if (b != this)
+                b.enabled = false;
+        }
+
+        // Show the level-completion canvas
+        if (levelCompletedCanvas != null)
+            levelCompletedCanvas.SetActive(true);
+        else
+            Debug.LogWarning("[WheelTwoHandGrab] levelCompletedCanvas is not assigned!");
 
         Debug.Log("[WheelTwoHandGrab] Wheel placed on carpet — step complete!");
         enabled = false;

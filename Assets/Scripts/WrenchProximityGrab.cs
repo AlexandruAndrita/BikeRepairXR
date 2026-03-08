@@ -32,6 +32,12 @@ public class WrenchProximityGrab : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        // Start kinematic so wrench rests on the table without physics.
+        if (_rb != null)
+        {
+            _rb.isKinematic = true;
+            _rb.useGravity  = false;
+        }
 
         OVRCameraRig rig = FindFirstObjectByType<OVRCameraRig>();
         if (rig != null)
@@ -81,13 +87,22 @@ public class WrenchProximityGrab : MonoBehaviour
     {
         _heldBy = hand;
         _holdingController = controller;
-        if (_rb != null) _rb.isKinematic = true;
+        if (_rb != null)
+        {
+            _rb.isKinematic = true;
+            _rb.useGravity  = false;
+        }
     }
 
     private void Drop()
     {
         _heldBy = null;
         _holdingController = OVRInput.Controller.None;
-        // Wrench stays wherever it was dropped
+        // Enable gravity so the wrench falls to the floor.
+        if (_rb != null)
+        {
+            _rb.isKinematic = false;
+            _rb.useGravity  = true;
+        }
     }
 }
