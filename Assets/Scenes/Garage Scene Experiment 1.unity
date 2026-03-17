@@ -699,7 +699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a415d69825c7d243b32377482d827da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AUIT.ContextSources.TransformContextSource
-  contextSource: {fileID: 198575142}
+  contextSource: {fileID: 999548078}
 --- !u!1 &211854917
 GameObject:
   m_ObjectHideFlags: 0
@@ -2756,6 +2756,11 @@ PrefabInstance:
       addedObject: {fileID: 161286995}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bbb2db3731ace5545b6db29d18a9d36d, type: 3}
+--- !u!4 &999548078 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3712516090237219037, guid: bbb2db3731ace5545b6db29d18a9d36d, type: 3}
+  m_PrefabInstance: {fileID: 999548077}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1010911105 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4468067120900173884, guid: bbb2db3731ace5545b6db29d18a9d36d, type: 3}
