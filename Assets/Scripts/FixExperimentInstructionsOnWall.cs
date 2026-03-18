@@ -6,7 +6,6 @@ public class FixExperimentInstructionsOnWall : MonoBehaviour
     [SerializeField] private Transform anchor;
     [SerializeField] private Vector3 localPosition = new Vector3(0f, 0f, 0.002f);
     [SerializeField] private Vector3 localEulerAngles = Vector3.zero;
-    [SerializeField] private Vector3 localScale = Vector3.one;
 
     private void LateUpdate()
     {
@@ -17,6 +16,5 @@ public class FixExperimentInstructionsOnWall : MonoBehaviour
 
         transform.localPosition = localPosition;
         transform.localRotation = Quaternion.Euler(localEulerAngles);
-        //transform.localScale = localScale;
     }
 }
