@@ -3274,6 +3274,7 @@ GameObject:
   - component: {fileID: 1232722296}
   - component: {fileID: 1232722295}
   - component: {fileID: 1232722305}
+  - component: {fileID: 1232722306}
   m_Layer: 0
   m_Name: CounterCanvas
   m_TagString: Untagged
@@ -3309,12 +3310,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1232722294}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2140d2b457bea84881488302059889b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.Surfaces.ColliderSurface
-  _collider: {fileID: 0}
+  _collider: {fileID: 1232722306}
 --- !u!114 &1232722298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3462,6 +3463,28 @@ MonoBehaviour:
   anchorAbove: {fileID: 1830385473}
   heightOffset: 0.9
   yAxisOnlyRotation: 0
+--- !u!64 &1232722306
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232722294}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1001 &1297264884
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4905,7 +4928,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1778920935}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43f86b14a27b52f4f9298c33015b5c26, type: 3}
   m_Name: 
@@ -4967,7 +4990,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3747, y: 1.6994, z: 0}
+  m_Size: {x: 2.3747, y: 1.6994, z: 0.01}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1778920942
 MonoBehaviour:
