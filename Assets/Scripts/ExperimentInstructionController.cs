@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using TMPro;
 
 /// <summary>
 /// Manages instruction navigation for the ExperimentInstructions canvas.
 /// Allows users to navigate through multiple instruction pages using Next/Prev buttons.
+/// Each instruction can have an associated video clip.
 /// </summary>
 public class ExperimentInstructionController : MonoBehaviour
 {
@@ -17,6 +19,13 @@ public class ExperimentInstructionController : MonoBehaviour
     
     [Tooltip("Previous/Back button to go to the previous instruction")]
     public Button prevButton;
+    
+    [Header("Video References")]
+    [Tooltip("VideoPlayer component for playing instruction videos")]
+    public VideoPlayer videoPlayer;
+    
+    [Tooltip("RawImage component for displaying video output")]
+    public RawImage videoImage;
     
     [Header("Instructions")]
     [Tooltip("Array of instruction strings for each page")]
@@ -31,9 +40,16 @@ public class ExperimentInstructionController : MonoBehaviour
         "You're all set! Great job completing the task."
     };
     
+    [Header("Videos")]
+    [Tooltip("Array of video clips corresponding to each instruction. Leave null for instructions without video.")]
+    public VideoClip[] instructionVideos;
+    
     [Header("Settings")]
     [Tooltip("Whether to loop back to the first instruction after the last one")]
     public bool loopInstructions = false;
+    
+    [Tooltip("Whether to loop the current video while on its instruction")]
+    public bool loopCurrentVideo = true;
     
     [Header("Controller Button Mapping")]
     [Tooltip("Use left controller X button for Prev and Y button for Next")]
@@ -102,6 +118,40 @@ public class ExperimentInstructionController : MonoBehaviour
         {
             GameObject prevBtnObj = GameObject.Find("PrevButton");
             if (prevBtnObj != null) prevButton = prevBtnObj.GetComponent<Button>();
+        }
+        
+        // Auto-find video components if not assigned
+        if (videoPlayer == null)
+        {
+            videoPlayer = GetComponentInChildren<VideoPlayer>(true);
+            if (videoPlayer == null)
+            {
+                GameObject videoObj = GameObject.Find("VideoImage");
+                if (videoObj != null) videoPlayer = videoObj.GetComponent<VideoPlayer>();
+            }
+        }
+        
+        if (videoImage == null)
+        {
+            videoImage = GetComponentInChildren<RawImage>(true);
+            if (videoImage == null)
+            {
+                GameObject videoObj = GameObject.Find("VideoImage");
+                if (videoObj != null) videoImage = videoObj.GetComponent<RawImage>();
+            }
+        }
+        
+        // Initialize video player settings
+        if (videoPlayer != null)
+        {
+            videoPlayer.isLooping = loopCurrentVideo;
+            videoPlayer.playOnAwake = false;
+            
+            // Set up render texture if using RawImage
+            if (videoImage != null && videoPlayer.targetTexture == null)
+            {
+                videoPlayer.renderMode = VideoRenderMode.RenderTexture;
+            }
         }
         
         // Add listeners to buttons
@@ -214,8 +264,49 @@ public class ExperimentInstructionController : MonoBehaviour
             instructionText.text = instructions[currentIndex];
         }
         
+        // Update video for current instruction
+        UpdateVideoDisplay();
+        
         // Update button interactability
         UpdateButtonStates();
+    }
+    
+    void UpdateVideoDisplay()
+    {
+        if (videoPlayer == null) return;
+        
+        // Stop current video
+        videoPlayer.Stop();
+        
+        // Check if there's a video for this instruction
+        if (instructionVideos != null && currentIndex >= 0 && currentIndex < instructionVideos.Length)
+        {
+            VideoClip clip = instructionVideos[currentIndex];
+            if (clip != null)
+            {
+                videoPlayer.clip = clip;
+                videoPlayer.isLooping = loopCurrentVideo;
+                videoPlayer.Play();
+                
+                // Show video image
+                if (videoImage != null)
+                    videoImage.enabled = true;
+            }
+            else
+            {
+                // No video for this instruction
+                videoPlayer.clip = null;
+                if (videoImage != null)
+                    videoImage.enabled = false;
+            }
+        }
+        else
+        {
+            // No video array or index out of range
+            videoPlayer.clip = null;
+            if (videoImage != null)
+                videoImage.enabled = false;
+        }
     }
     
     void UpdateButtonStates()
@@ -275,5 +366,11 @@ public class ExperimentInstructionController : MonoBehaviour
             nextButton.onClick.RemoveListener(OnNextClicked);
         if (prevButton != null)
             prevButton.onClick.RemoveListener(OnPrevClicked);
+        
+        // Clean up video player
+        if (videoPlayer != null && videoPlayer.isPlaying)
+        {
+            videoPlayer.Stop();
+        }
     }
 }
