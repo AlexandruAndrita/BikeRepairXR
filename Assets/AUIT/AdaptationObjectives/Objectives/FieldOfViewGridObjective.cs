@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using AUIT.AdaptationObjectives.Definitions;
 using AUIT.AdaptationObjectives.Extras;
-using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace AUIT.AdaptationObjectives.Objectives
 {
@@ -252,9 +254,9 @@ namespace AUIT.AdaptationObjectives.Objectives
 
             return closestCell;
         }
-        
     }
-    
+
+#if UNITY_EDITOR
     [CustomEditor(typeof(FieldOfViewGridObjective))]
     public class FieldOfViewGridObjectiveEditor : Editor
     {
@@ -275,11 +277,11 @@ namespace AUIT.AdaptationObjectives.Objectives
             gridConfig.width = EditorGUILayout.IntSlider("Width", gridConfig.width, 3, 10);
             gridConfig.height = EditorGUILayout.IntSlider("Height", gridConfig.height, 3, 10);
             if (EditorGUI.EndChangeCheck())
-            {
-                Undo.RecordObject(gridConfig, "Resize Grid");
-                gridConfig.OnValidate();
-                EditorUtility.SetDirty(gridConfig);
-            }
+        {
+            Undo.RecordObject(gridConfig, "Resize Grid");
+            gridConfig.OnValidate();
+            EditorUtility.SetDirty(gridConfig);
+        }
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Active Cells", EditorStyles.boldLabel);
@@ -317,4 +319,5 @@ namespace AUIT.AdaptationObjectives.Objectives
         }
 
     }
+#endif
 }

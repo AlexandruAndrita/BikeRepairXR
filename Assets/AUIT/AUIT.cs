@@ -11,7 +11,9 @@ using AUIT.AdaptationObjectives.Definitions;
 using AUIT.Constraints;
 using AUIT.Extras;
 using Cysharp.Threading.Tasks;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 namespace AUIT
 {
@@ -480,6 +482,7 @@ namespace AUIT
         public string solver;
     }
 
+#if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(BackendSolver))]
     public class BackendSolverDrawer : PropertyDrawer
     {
@@ -534,4 +537,5 @@ namespace AUIT
             return EditorGUIUtility.singleLineHeight * 2 + 4; // Adjust height to fit two fields
         }
     }
+#endif
 }
