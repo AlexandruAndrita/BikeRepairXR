@@ -89,10 +89,6 @@ NuGet .NET packages (see [Assets/packages.config](Assets/packages.config); resto
 │  └─ XR 2/
 ├─ Packages/
 ├─ ProjectSettings/
-├─ UserSettings/
-├─ Library/
-├─ Logs/
-├─ Temp/
-└─ obj/
+└─ UserSettings/
 ```
 
