@@ -1,2 +1,98 @@
-# Bicycle Repair XR Using AUIT 
-AR Bicycle repair app
+# BikeRepairXR
+
+BikeRepairXR is a Unity XR bicycle repair experience built for Meta Quest. It combines hands-on interaction (tools, grabbing, locomotion, step progression) with an adaptive UI/optimization system called [AUIT](https://github.com/joaobelo92/auit) to place and update instruction canvases at runtime.
+
+Core areas to look at:
+- AUIT runtime/optimization logic lives in [Assets/AUIT/](Assets/AUIT/)
+- Gameplay/AR interaction scripts live in [Assets/Scripts/](Assets/Scripts/)
+- Scenes for the final experiments live in [Assets/Scenes/Finals/](Assets/Scenes/Finals/)
+- Project/package dependencies are defined in [Packages/manifest.json](Packages/manifest.json)
+
+- Some glimps of experiments [Assets/InstructionVideos/](Assets/InstructionVideos/):
+
+#### Pick up wrench:
+
+<video src="Assets/InstructionVideos/Pick_up_wrench.mp4" controls muted playsinline width="720"></video>
+
+#### Wrench wheel interaction:
+
+<video src="Assets/InstructionVideos/Wrench_Wheel_Interaction.mp4" controls muted playsinline width="720"></video>
+
+#### Wrench pedal interaction:
+
+<video src="Assets/InstructionVideos/Wrench_Pedal_Interaction.mp4" controls muted playsinline width="720"></video>
+
+#### Wheel grabbing interaction:
+
+<video src="Assets/InstructionVideos/Wheel_Grabbing_Interaction.mp4" controls muted playsinline width="720"></video>
+
+#### UI next/prev navigation:
+
+<video src="Assets/InstructionVideos/XY_nextprev.mp4" controls muted playsinline width="720"></video>
+
+## Requirements
+- Unity Editor `6000.3.8f1` (see [ProjectSettings/ProjectVersion.txt](ProjectSettings/ProjectVersion.txt))
+- Android build support installed via Unity Hub (Android SDK/NDK + OpenJDK)
+- Target device: Meta Quest (Quest / Quest 2 / Quest Pro / Quest 3 / Quest 3S), as declared in [Assets/Plugins/Android/AndroidManifest.xml](Assets/Plugins/Android/AndroidManifest.xml)
+
+## Dependencies
+
+Unity packages (see [Packages/manifest.json](Packages/manifest.json)):
+- Meta XR SDK `85.0.0` (Interaction SDK, Platform, Audio/Haptics): https://developer.oculus.com/documentation/unity/
+- Unity OpenXR (`com.unity.xr.openxr`): https://docs.unity3d.com/Packages/com.unity.xr.openxr@latest
+
+NuGet .NET packages (see [Assets/packages.config](Assets/packages.config); restore settings in [Assets/NuGet.config](Assets/NuGet.config)):
+- NetMQ: https://github.com/zeromq/netmq
+- AsyncIO (NetMQ dependency): https://www.nuget.org/packages/AsyncIO
+- Newtonsoft.Json (Json.NET): https://www.newtonsoft.com/json
+- Numpy: https://github.com/SciSharp/Numpy.NET
+- pythonnet: https://github.com/pythonnet/pythonnet
+- Python.Included / Python.Deployment (embedded Python runtime for .NET workflows): https://www.nuget.org/packages/Python.Included and https://www.nuget.org/packages/Python.Deployment
+
+
+## Project structure
+
+```text
+.
+├─ Assembly-CSharp-Editor.csproj
+├─ Assembly-CSharp.csproj
+├─ BikeRepairXR.sln
+├─ README.md
+├─ UniTask.Addressables.csproj
+├─ UniTask.csproj
+├─ UniTask.DOTween.csproj
+├─ UniTask.Editor.csproj
+├─ UniTask.Linq.csproj
+├─ UniTask.TextMeshPro.csproj
+├─ Assets/
+│  ├─ AUIT/
+│  ├─ Editor/
+│  ├─ InstructionVideos/
+│  ├─ InteractionSDK/
+│  ├─ Models/
+│  ├─ NuGet/
+│  ├─ Oculus/
+│  ├─ Packages/
+│  ├─ Plugins/
+│  ├─ Prefabs/
+│  ├─ Resources/
+│  ├─ Scenes/
+│  │  └─ Finals/
+│  ├─ Scripts/
+│  ├─ Settings/
+│  ├─ Simple Garage/
+│  ├─ StreamingAssets/
+│  ├─ TextMesh Pro/
+│  ├─ TutorialInfo/
+│  ├─ XR/
+│  ├─ XR 1/
+│  └─ XR 2/
+├─ Packages/
+├─ ProjectSettings/
+├─ UserSettings/
+├─ Library/
+├─ Logs/
+├─ Temp/
+└─ obj/
+```
+
